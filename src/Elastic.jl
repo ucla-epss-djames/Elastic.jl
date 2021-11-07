@@ -2,9 +2,13 @@ module Elastic
 
 using LinearAlgebra
 
+export kBarToGPa, kBarToMPa, eVToJ, kB
+export c1x, c44, Kv, muv, Kr, mur, Cs, Gu, Gl, royce_bound
+
 const kBarToGPa = 0.1
 const kBarToMPa = 100
 const eVToJ = 1.602176565e-19
+const kB = 1.380649e-23
 
 # Calculating Elastic Constants
 c1x(uu::Real, xx::Real, e::Real) = (uu - xx) / e
@@ -12,11 +16,11 @@ c44(zx::Real, e::Real) = -zx / (2e)
 
 # Voigt bound
 Kv(c11::Real, c12::Real) = 1/3*(c11 + 2c12)
-μv(c11::Real, c12::Real, c44::Real) = 1/5*(c11 - c12 + 3c44)
+muv(c11::Real, c12::Real, c44::Real) = 1/5*(c11 - c12 + 3c44)
 
 # Royce bound
 Kr(a::Real, b::Real) = (3(a + 2b))^-1
-μr(a::Real, b::Real, c::Real) = 5 / (4a - 4b + 3c)
+mur(a::Real, b::Real, c::Real) = 5 / (4a - 4b + 3c)
 
 # s constants for Royce bound calculations
 ar(s11::Real, s22::Real, s33::Real) = 1/3*(s11 + s22 + s33)
