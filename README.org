@@ -1,0 +1,7 @@
+#+TITLE: Elastic.jl
+#+AUTHOR: David James, davidabraham@ucla.edu
+
+* Description
+  This package consists of support elastic calculations for post processing of
+  VASP output. While I used for VASP, functions can be used for any elastic
+  calculations if you have the necessary inputs.
