@@ -2,9 +2,11 @@ module Elastic
 
 using LinearAlgebra
 
-export kBarToGPa, kBarToMPa, eVToJ, kB
+export andsToM, GPaToGPa, kBarToGPa, kBarToMPa, eVToJ, kB
 export c1x, c44, Kv, muv, Kr, mur, Cs, Gu, Gl, royce_bound
 
+const angsToM = 1e-10
+const GPaToPa = 1e9
 const kBarToGPa = 0.1
 const kBarToMPa = 100
 const eVToJ = 1.602176565e-19
