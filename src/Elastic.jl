@@ -2,15 +2,7 @@ module Elastic
 
 using LinearAlgebra
 
-export angsToM, GPaToPa, kBarToGPa, kBarToMPa, eVToJ, kB
 export c1x, c44, Kv, muv, Kr, mur, Cs, Gu, Gl, royce_bound
-
-const angsToM = 1e-10
-const GPaToPa = 1e9
-const kBarToGPa = 0.1
-const kBarToMPa = 100
-const eVToJ = 1.602176565e-19
-const kB = 1.380649e-23
 
 # Calculating Elastic Constants
 c1x(uu::Real, xx::Real, e::Real) = (uu - xx) / e
