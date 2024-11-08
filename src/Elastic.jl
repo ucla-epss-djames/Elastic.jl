@@ -5,4 +5,65 @@ include("voigt_royce.jl")
 include("hashin_shtrikman.jl")
 include("parrinello_rahman1981.jl")
 
+export calculate_elastic_moduli
+
+# right now designed to calculate the relevant strains for a cubic structure
+function calculate_elastic_moduli(
+    lattices::Matrix{Float64}, T::Union{Int64, Float64}
+    )::Tuple{Matrix{Float64}, Matrix{Float64}}
+
+    ϵ, V = strain_fluctuation(lattices)
+    S = compliances_from_fluctuations(ϵ, V, T)
+    Sc = symmetric_compliances(S)
+    C = cubic_elastic_constants(Sc)
+    mod = elastic_moduli(Sc, C)
+
+    return (C, mod)
+end
+
+function elastic_moduli(S::Matrix{Float64}, C::Matrix{Float64})::Matrix{Float64}
+
+    mod = zeros(3,2)
+
+    # --- K ---
+    voigt_K = Kv(C[1,1], C[2,1])
+    voigt_Kx = C[1,3]^2 * (1.0/3.0)^2 + C[2,3]^2 * (2.0/3.0)^2
+    voigt_Kx = sqrt(voigt_Kx)
+
+    # VOIGT-ROYCE G
+    voigt_G = muv(C[1,1], C[2,1], C[3,1])
+    voigt_Gx = C[1,3]^2*(0.2)^2 + C[2,3]^2*(-0.2)^2 + C[3,3]*(0.6)^2
+    voigt_Gx = sqrt(voigt_Gx)
+
+    royce_G = mur(S[1,1], S[2,1], S[3,1])
+    fx = -5.0 * (4.0*S[1,1] - 4.0*S[2,1] + 3.0*S[3,1])^(-2)
+    royce_Gx = S[1,3]^2*(4.0*fx)^2 + S[2,3]^2*(-4.0*fx)^2 + S[3,3]^2*(3.0*fx)^2
+    royce_Gx = sqrt(royce_Gx)
+
+    vr_G_avg = (voigt_G + royce_G) / 2.0
+    vr_Gx_avg = voigt_Gx^2 / 4.0 + royce_Gx^2 / 4.0
+    vr_Gx_avg = sqrt(vr_Gx_avg)
+
+    # HASHIN-SHTRIKMAN G
+    hs_cs = Cs(C[1,1], C[2,1])
+
+    hs_Gu = Gu(voigt_K, hs_cs, C[3,1])
+    hs_Gux = 0
+    hs_Gux = sqrt(hs_Gux)
+
+    hs_Gl = Gl(voigt_K, hs_cs, C[3,1])
+    hs_Glx = 0
+    hs_Glx = sqrt(hs_Glx)
+
+    hs_G_avg = (hs_Gu + hs_Gl) / 2.0
+    hs_Gx_avg = hs_Gux^2 / 4.0 + hs_Glx^2 / 4.0
+    hs_G_avg = sqrt(hs_G_avg)
+
+    mod[1,:] = [voigt_K voigt_Kx]
+    mod[2,:] = [vr_G_avg vr_Gx_avg]
+    mod[3,:] = [hs_G_avg hs_Gx_avg]
+
+    return mod
+end
+
 end # end of module
