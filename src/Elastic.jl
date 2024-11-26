@@ -38,11 +38,13 @@ function elastic_moduli(S::Matrix{Float64}, C::Matrix{Float64}, V::Vector{Float6
     GPa = 1e-9
     kB = k_B.val
     V_avg = estimate(V)
-    ΔV = (V .- V_avg[1]) .^ 2
-    ΔV_avg = estimate(ΔV)
+    V2_avg = estimate(V .^ 2)
+    ΔV = V2_avg[1] - V_avg[1]^2
     fx = kB * T * Am * GPa
-    K = V_avg[1] / ΔV_avg[1] * fx
-    Kx = V_avg[2]^2*(fx / ΔV_avg[1])^2 + ΔV_avg[2]^2*(V_avg[1] / ΔV_avg[1]^(-2) * fx)^2
+    K = V_avg[1] / ΔV[1] * fx
+    Kx = V_avg[2]^2*(fx*(V2_avg[1]+V_avg[1]^2)/(V2_avg[1] - V_avg[1]^2)^2)^2
+    Kx += V2_avg[2]^2*(-V_avg[1]*fx / (V2_avg[1] - V_avg[1]^2)^2)^2
+    Kx = sqrt(Kx)
 
     # VOIGT-ROYCE G1 - DEBUGGING
     voigt_G = muv(C[1,1], C[2,1], C[3,1])
