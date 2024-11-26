@@ -1,5 +1,8 @@
 module Elastic
 
+using PhysicalConstants.CODATA2018: k_B
+using BlockingMethod
+
 include("static.jl")
 include("voigt_royce.jl")
 include("hashin_shtrikman.jl")
@@ -16,19 +19,30 @@ function calculate_elastic_moduli(
     S = compliances_from_fluctuations(ϵ, V, T)
     Sc = symmetric_compliances(S)
     C = cubic_elastic_constants(Sc)
-    mod = elastic_moduli(Sc, C)
+    mod = elastic_moduli(Sc, C, V, T)
 
     return (C, mod)
 end
 
-function elastic_moduli(S::Matrix{Float64}, C::Matrix{Float64})::Matrix{Float64}
+function elastic_moduli(S::Matrix{Float64}, C::Matrix{Float64}, V::Vector{Float64}, T::Union{Int64, Float64})::Matrix{Float64}
 
-    mod = zeros(4,2)
+    mod = zeros(5,2)
 
-    # --- K ---
+    # --- K --- ELASTIC CONSTANTS
     voigt_K = Kv(C[1,1], C[2,1])
     voigt_Kx = C[1,3]^2 * (1.0/3.0)^2 + C[2,3]^2 * (2.0/3.0)^2
     voigt_Kx = sqrt(voigt_Kx)
+
+    # --- K --- VOLUME FLUX
+    Am = 1e30
+    GPa = 1e-9
+    kB = k_B.val
+    V_avg = estimate(V)
+    ΔV = (V .- V_avg[1]) .^ 2
+    ΔV_avg = estimate(ΔV)
+    fx = kB * T * Am * GPa
+    K = V_avg[1] / ΔV_avg[1] * f
+    Kx = V_avg[2]^2*(f / ΔV_avg[1])^2 + ΔV_avg[2]^2*(V_avg[1] / ΔV_avg[1]^(-2) * f)^2
 
     # VOIGT-ROYCE G1 - DEBUGGING
     voigt_G = muv(C[1,1], C[2,1], C[3,1])
@@ -72,6 +86,7 @@ function elastic_moduli(S::Matrix{Float64}, C::Matrix{Float64})::Matrix{Float64}
     hs_G_avg = sqrt(hs_G_avg)
 
     mod[1,:] = [voigt_K voigt_Kx]
+    mod[2,:] = [K Kx]
     mod[2,:] = [vr_G_avg vr_Gx_avg]
     mod[3,:] = [vr_G_avg2 vr_Gx_avg2]
     mod[4,:] = [hs_G_avg hs_Gx_avg]
