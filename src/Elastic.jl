@@ -3,6 +3,7 @@ module Elastic
 using PhysicalConstants.CODATA2018: k_B
 using BlockingMethod
 
+include("atoms.jl")
 include("static.jl")
 include("voigt_royce.jl")
 include("hashin_shtrikman.jl")

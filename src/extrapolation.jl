@@ -1,18 +1,20 @@
-const h_bar = 1.05457e-34
-const m_e = 9.10938e-31
-const a_fg = ((3*π^2)^(2/3)/5)*h_bar^2 / m_e * ((1e10)^5 / 1e9) # GPa * Å⁵
+using PhysicalConstants.CODATA2018: m_e, ħ
+
+export APL
+
 
 # Z atomic number -- protons
-c_0(V0,K0,Z) = -log(3*K0 / (a_fg*(Z/V0)^(5/3)))
-c_2(c0, K1) = 3/2*(K1 - 3) - c0
 x(V,V0) = (V / V0)^(1/3)
 y(V,V0) = 1 - x(V,V0)
 
 # Vinet
-MVL(V,V0,K0,c) = 3*K0*x(V,V0)^-2 * y(V,V0) * exp(c * y(V,V0))
-MVLK(V,V0,K0,c) = K0*x(V,V0)^-2*exp(c*y(V,V0))*(2 - x(V,V0) + c*x(V,V0)*y(V,V0))
+vinet_P(V,V0,K0,c) = 3*K0*x(V,V0)^-2 * y(V,V0) * exp(c * y(V,V0))
+vinet_K(V,V0,K0,c) = K0*x(V,V0)^-2*exp(c*y(V,V0))*(2 - x(V,V0) + c*x(V,V0)*y(V,V0))
 
 # Holzapfel 98
+const a_fg = ((3*π^2)^(2/3)/5)* ħ.val^2 / m_e.val * ((1e10)^5 / 1e9) # GPa * Å⁵
+c_0(V0,K0,Z) = -log(3*K0 / (a_fg*(Z/V0)^(5/3)))
+c_2(c0, K1) = 3/2*(K1 - 3) - c0
 APL(V,V0,K0,c0,c2) = 3*K0*x(V,V0)^-5 * y(V,V0) * exp(c0*y(V,V0)) * (1 + x(V,V0)*c2*y(V,V0))
 APLK(V,V0,K0,c0,c2) = K0/V*x(V,V0)^-2*exp(c0*y(V,V0))*(c2*V*(2+c0*(-2+x(V,V0))) + 5*V0 + V0*x(V,V0)*(-4+c0-c0*x(V,V0)) + c2*x(V,V0)*V0*(4-6*x(V,V0)+c0*x(V,V0)))
 
