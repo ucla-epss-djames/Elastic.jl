@@ -1,6 +1,6 @@
 using PhysicalConstants.CODATA2018: m_e, ħ
 
-export APL
+export MVL, MVLK, APL, APLK, P3, K3, G3S, G3M
 
 
 # Z atomic number -- protons
@@ -8,8 +8,8 @@ x(V,V0) = (V / V0)^(1/3)
 y(V,V0) = 1 - x(V,V0)
 
 # Vinet
-vinet_P(V,V0,K0,c) = 3*K0*x(V,V0)^-2 * y(V,V0) * exp(c * y(V,V0))
-vinet_K(V,V0,K0,c) = K0*x(V,V0)^-2*exp(c*y(V,V0))*(2 - x(V,V0) + c*x(V,V0)*y(V,V0))
+MVL(V,V0,K0,c) = 3*K0*x(V,V0)^-2 * y(V,V0) * exp(c * y(V,V0))
+MVLK(V,V0,K0,c) = K0*x(V,V0)^-2*exp(c*y(V,V0))*(2 - x(V,V0) + c*x(V,V0)*y(V,V0))
 
 # Holzapfel 98
 const a_fg = ((3*π^2)^(2/3)/5)* ħ.val^2 / m_e.val * ((1e10)^5 / 1e9) # GPa * Å⁵

@@ -6,6 +6,7 @@ using BlockingMethod
 include("atoms.jl")
 include("static.jl")
 include("voigt_royce.jl")
+include("extrapolation.jl")
 include("hashin_shtrikman.jl")
 include("parrinello_rahman1981.jl")
 
