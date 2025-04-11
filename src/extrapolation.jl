@@ -1,6 +1,6 @@
 using PhysicalConstants.CODATA2018: m_e, ħ
 
-export MVL, MVLK, APL, APLK, P3, K3, G3S, G3M
+export MVL, MVLK, APL, APLK, P3, K3, G3S, G3M, c_0, c_2
 
 
 # Z atomic number -- protons

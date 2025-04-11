@@ -5,7 +5,7 @@ using BlockingMethod
 
 include("atoms.jl")
 include("static.jl")
-include("voigt_royce.jl")
+include("voigt_reuss.jl")
 include("extrapolation.jl")
 include("hashin_shtrikman.jl")
 include("parrinello_rahman1981.jl")
@@ -48,30 +48,30 @@ function elastic_moduli(S::Matrix{Float64}, C::Matrix{Float64}, V::Vector{Float6
     Kx += V2_avg[2]^2*(-V_avg[1]*fx / (V2_avg[1] - V_avg[1]^2)^2)^2
     Kx = sqrt(Kx)
 
-    # VOIGT-ROYCE G1 - DEBUGGING
+    # VOIGT-REUSS G1 - DEBUGGING
     voigt_G = muv(C[1,1], C[2,1], C[3,1])
     voigt_Gx = C[1,3]^2*(0.2)^2 + C[2,3]^2*(-0.2)^2 + C[3,3]*(0.6)^2
     voigt_Gx = sqrt(voigt_Gx)
 
-    royce_G = mur(S[1,1], S[2,1], S[3,1])
+    reuss_G = mur(S[1,1], S[2,1], S[3,1])
     fx = -5.0 * (4.0*S[1,1] - 4.0*S[2,1] + 3.0*S[3,1])^(-2)
-    royce_Gx = S[1,3]^2*(4.0*fx)^2 + S[2,3]^2*(-4.0*fx)^2 + S[3,3]^2*(3.0*fx)^2
-    royce_Gx = sqrt(royce_Gx)
+    reuss_Gx = S[1,3]^2*(4.0*fx)^2 + S[2,3]^2*(-4.0*fx)^2 + S[3,3]^2*(3.0*fx)^2
+    reuss_Gx = sqrt(reuss_Gx)
 
-    vr_G_avg = (voigt_G + royce_G) / 2.0
-    vr_Gx_avg = voigt_Gx^2 / 4.0 + royce_Gx^2 / 4.0
+    vr_G_avg = (voigt_G + reuss_G) / 2.0
+    vr_Gx_avg = voigt_Gx^2 / 4.0 + reuss_Gx^2 / 4.0
     vr_Gx_avg = sqrt(vr_Gx_avg)
 
-    # VOIGT-ROYCE G2
-    ABC = royce_bound(C[1,1], C[2,1], C[3,1])
+    # VOIGT-REUSS G2
+    ABC = reuss_bound(C[1,1], C[2,1], C[3,1])
 
-    royce_G2 = mur(ABC[1], ABC[2], ABC[3])
+    reuss_G2 = mur(ABC[1], ABC[2], ABC[3])
     fx = -5.0 * (4.0*ABC[1] - 4.0*ABC[2] + 3.0*ABC[3])^(-2)
-    royce_Gx2 = S[1,3]^2*(4.0*fx)^2 + S[2,3]^2*(-4.0*fx)^2 + S[3,3]^2*(3.0*fx)^2
-    royce_Gx2 = sqrt(royce_Gx2)
+    reuss_Gx2 = S[1,3]^2*(4.0*fx)^2 + S[2,3]^2*(-4.0*fx)^2 + S[3,3]^2*(3.0*fx)^2
+    reuss_Gx2 = sqrt(reuss_Gx2)
 
-    vr_G_avg2 = (voigt_G + royce_G2) / 2.0
-    vr_Gx_avg2 = voigt_Gx^2 / 4.0 + royce_Gx2^2 / 4.0
+    vr_G_avg2 = (voigt_G + reuss_G2) / 2.0
+    vr_Gx_avg2 = voigt_Gx^2 / 4.0 + reuss_Gx2^2 / 4.0
     vr_Gx_avg2 = sqrt(vr_Gx_avg2)
 
     # HASHIN-SHTRIKMAN G - DOESNT WORK

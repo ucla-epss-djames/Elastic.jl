@@ -1,6 +1,6 @@
 using LinearAlgebra
 
-export Kv, muv, Kr, mur, royce_bound
+export Kv, muv, Kr, mur, reuss_bound
 
 # *** Voigt Bound ***
 
@@ -15,19 +15,19 @@ function muv(c11::Float64, c12::Float64, c44::Float64)::Float64
 end
 
 
-# *** Royce Bound ***
+# *** Reuss Bound ***
 
-# royce bulk modulus
+# reuss bulk modulus
 function Kr(a::Float64, b::Float64)::Float64
     return (3.0 * (a + 2.0*b)) ^ -1
 end
 
-# royce shear modulus
+# reuss shear modulus
 function mur(a::Float64, b::Float64, c::Float64)::Float64
     return 5.0 / (4.0*a - 4.0*b + 3.0*c)
 end
 
-# compliance calculations for royce calculation
+# compliance calculations for reuss calculation
 function ar(s11::Float64, s22::Float64, s33::Float64)::Float64
     return 1.0/3.0 * (s11 + s22 + s33)
 end
@@ -40,8 +40,8 @@ function cr(s44::Float64, s55::Float64, s66::Float64)::Float64
     return 1.0/3.0 * (s44 + s55 + s66)
 end
 
-# calculates compliances for royce bulk and shear modulus
-function royce_bound(c11::Float64, c12::Float64, c44::Float64)::Vector{Float64}
+# calculates compliances for reuss bulk and shear modulus
+function reuss_bound(c11::Float64, c12::Float64, c44::Float64)::Vector{Float64}
 
     C = zeros(6,6)
 
