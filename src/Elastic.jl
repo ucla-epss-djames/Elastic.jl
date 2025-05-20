@@ -75,18 +75,14 @@ function elastic_moduli(S::Matrix{Float64}, C::Matrix{Float64}, V::Vector{Float6
     vr_Gx_avg2 = sqrt(vr_Gx_avg2)
 
     # HASHIN-SHTRIKMAN G - DOESNT WORK
-    hs_cs = Cs(C[1,1], C[2,1])
+    hs_G1 = G1HS(voigt_K, C[1,1], C[2,1], C[3,1])
+    hs_G1x = sqrt(0)
 
-    hs_Gu = Gu(voigt_K, hs_cs, C[3,1])
-    hs_Gux = 0
-    hs_Gux = sqrt(hs_Gux)
+    hs_G2 = G2HS(voigt_K, C[1,1], C[2,1], C[3,1])
+    hs_G2x = sqrt(0)
 
-    hs_Gl = Gl(voigt_K, hs_cs, C[3,1])
-    hs_Glx = 0
-    hs_Glx = sqrt(hs_Glx)
-
-    hs_G_avg = (hs_Gu + hs_Gl) / 2.0
-    hs_Gx_avg = hs_Gux^2 / 4.0 + hs_Glx^2 / 4.0
+    hs_G_avg = (hs_G1 + hs_G2) / 2.0
+    hs_Gx_avg = hs_G1x^2 / 4.0 + hs_G2x^2 / 4.0
     hs_G_avg = sqrt(hs_G_avg)
 
     mod[1,:] = [voigt_K voigt_Kx]
