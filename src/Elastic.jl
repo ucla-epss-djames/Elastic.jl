@@ -14,7 +14,7 @@ export calculate_elastic_moduli
 
 # right now designed to calculate the relevant strains for a cubic structure
 function calculate_elastic_moduli(
-    lattices::Matrix{Float64}, T::Union{Int64, Float64}
+    lattices::AbstractMatrix{<:Float64}, T::Union{Int64, Float64}
     )::Tuple{Matrix{Float64}, Matrix{Float64}}
 
     ϵ, V = strain_fluctuation(lattices)
@@ -26,7 +26,8 @@ function calculate_elastic_moduli(
     return (C, mod)
 end
 
-function elastic_moduli(S::Matrix{Float64}, C::Matrix{Float64}, V::Vector{Float64}, T::Union{Int64, Float64})::Matrix{Float64}
+function elastic_moduli(S::AbstractMatrix{<:Float64}, C::AbstractMatrix{<:Float64},
+                        V::Vector{Float64}, T::Union{Int64, Float64})::Matrix{Float64}
 
     mod = zeros(5,2)
 

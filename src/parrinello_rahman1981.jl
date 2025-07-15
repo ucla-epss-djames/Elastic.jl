@@ -5,7 +5,7 @@ using PhysicalConstants.CODATA2018: k_B
 
 # lattice file, each row: l11, l12, l13, l22, l23, l33
 function strain_fluctuation(
-    lattices::Matrix{Float64}
+    lattices::AbstractMatrix{<:Float64}
     )::Tuple{Matrix{Float64}, Vector{Float64}}
 
     l = size(lattices)[1]
@@ -53,7 +53,7 @@ function strain_fluctuation(
 end
 
 function compliances_from_fluctuations(
-    ϵ::Matrix{Float64}, V::Vector{Float64}, T::Union{Int64, Float64}
+    ϵ::AbstractMatrix{<:Float64}, V::Vector{Float64}, T::Union{Int64, Float64}
     )::Matrix{Float64}
 
     ϵ_avg = zeros(9,2)
@@ -88,7 +88,7 @@ function compliances_from_fluctuations(
     return S
 end
 
-function symmetric_compliances(S::Matrix{Float64})::Matrix{Float64}
+function symmetric_compliances(S::AbstractMatrix{<:Float64})::Matrix{Float64}
     Sc = zeros(3,3)
 
     # computing symmetic S
@@ -106,7 +106,7 @@ end
 # returns a 3x3 matrix
 # row: C11, C12, C44
 # col: value, std
-function cubic_elastic_constants(S::Matrix{Float64})::Matrix{Float64}
+function cubic_elastic_constants(S::AbstractMatrix{<:Float64})::Matrix{Float64}
 
     # computing elastic constants
     # col 1: value
