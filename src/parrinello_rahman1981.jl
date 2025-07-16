@@ -37,9 +37,6 @@ function strain_fluctuation(
         h = @SMatrix [lattices[i,1] lattices[i,2] lattices[i,3];
                       0.0           lattices[i,4] lattices[i,5];
                       0.0           0.0           lattices[i,6]]
-        h[1,1] = lattices[i,1]; h[2,2] = lattices[i,4]; h[3,3] = lattices[i,6]
-        h[2,3] = lattices[i,5]; h[1,3] = lattices[i,3]
-        h[1,2] = lattices[i,2]
 
         G = transpose(h) * h
 
