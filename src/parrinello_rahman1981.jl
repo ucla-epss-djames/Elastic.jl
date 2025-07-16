@@ -23,6 +23,10 @@ function strain_fluctuation(
     h0[1,3] = estimate(lattices[:,3])[1]
     h0[1,2] = estimate(lattices[:,2])[1]
 
+    # eq 17 parrinello+rahman1982
+    h0_inv = inv(h0)
+    h0_inv_T = transpose(h0_inv)
+
     for i in 1:l
         # populating h with "strained" vol
         h[1,1] = lattices[i,1]; h[2,2] = lattices[i,4]; h[3,3] = lattices[i,6]
@@ -35,9 +39,6 @@ function strain_fluctuation(
         # beneath eq. 4 hernandez2001
         V[i] = det(h)
 
-        # eq 17 parrinello+rahman1982
-        h0_inv = inv(h0)
-        h0_inv_T = transpose(h0_inv)
         Gh0_inv = G * h0_inv
         ϵ0 = 0.5*(h0_inv_T*Gh0_inv - I(3))
         ϵ[i,1] = ϵ0[1,1]

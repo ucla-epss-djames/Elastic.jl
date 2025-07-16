@@ -1,0 +1,15 @@
+
+n = 15000 elastic_constants_time
+BenchmarkTools.Trial: 1 sample with 1 evaluation per sample.
+ Single result which took 285.971 s (9.17% GC) to evaluate,
+ with a memory estimate of 148.79 GiB, over 1826717930 allocations.
+
+BenchmarkTools.Trial: 1 sample with 1 evaluation per sample.
+ Single result which took 304.565 s (9.44% GC) to evaluate,
+ with a memory estimate of 148.79 GiB, over 1826708337 allocations.
+
+after @view change
+no increase in speed, but memory estimate got reduced
+BenchmarkTools.Trial: 1 sample with 1 evaluation per sample.
+ Single result which took 294.183 s (8.90% GC) to evaluate,
+ with a memory estimate of 143.67 GiB, over 1826632137 allocations.
