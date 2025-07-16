@@ -25,3 +25,13 @@ speed cut more and memory estimate further reduced
 BenchmarkTools.Trial: 1 sample with 1 evaluation per sample.
  Single result which took 47.524 s (15.99% GC) to evaluate,
  with a memory estimate of 40.05 GiB, over 116729639 allocations.
+
+full change of StaticArrays
+forgot to move I3 call into for-loop
+allocations further reduced, speed is still about the same
+BenchmarkTools.Trial: 1 sample with 1 evaluation per sample.
+ Single result which took 41.113 s (15.08% GC) to evaluate,
+ with a memory estimate of 36.65 GiB, over 2752139 allocations.
+BenchmarkTools.Trial: 1 sample with 1 evaluation per sample.
+ Single result which took 46.647 s (16.02% GC) to evaluate,
+ with a memory estimate of 36.65 GiB, over 2752137 allocations.
