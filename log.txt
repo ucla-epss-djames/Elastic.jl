@@ -13,3 +13,9 @@ no increase in speed, but memory estimate got reduced
 BenchmarkTools.Trial: 1 sample with 1 evaluation per sample.
  Single result which took 294.183 s (8.90% GC) to evaluate,
  with a memory estimate of 143.67 GiB, over 1826632137 allocations.
+
+after inv() call moved outside of for loop
+almost cut in half in time and memory estimate reduced
+BenchmarkTools.Trial: 1 sample with 1 evaluation per sample.
+ Single result which took 170.339 s (16.79% GC) to evaluate,
+ with a memory estimate of 128.38 GiB, over 1598677135 allocations.

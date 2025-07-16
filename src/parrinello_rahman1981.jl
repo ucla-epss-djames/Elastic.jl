@@ -1,7 +1,10 @@
 using StatsBase
+using StaticArrays
 using LinearAlgebra
 using BlockingMethod
 using PhysicalConstants.CODATA2018: k_B
+
+const SA = StaticArrays
 
 # lattice file, each row: l11, l12, l13, l22, l23, l33
 function strain_fluctuation(
@@ -9,26 +12,31 @@ function strain_fluctuation(
     )::Tuple{Matrix{Float64}, Vector{Float64}}
 
     l = size(lattices)[1]
-    h = UpperTriangular(zeros(3, 3))
-    h0 = UpperTriangular(zeros(3, 3))
+    h0A = UpperTriangular(zeros(3, 3))
     ϵ = zeros(l,6)
     V = zeros(l)
 
     # beneath eq 2.27 parrinello+rahman1981
     # h0 and how its defined in hernandez+2001
-    h0[1,1] = estimate(lattices[:,1])[1]
-    h0[2,2] = estimate(lattices[:,4])[1]
-    h0[3,3] = estimate(lattices[:,6])[1]
-    h0[2,3] = estimate(lattices[:,5])[1]
-    h0[1,3] = estimate(lattices[:,3])[1]
-    h0[1,2] = estimate(lattices[:,2])[1]
+    h0A[1,1] = estimate(lattices[:,1])[1]
+    h0A[2,2] = estimate(lattices[:,4])[1]
+    h0A[3,3] = estimate(lattices[:,6])[1]
+    h0A[2,3] = estimate(lattices[:,5])[1]
+    h0A[1,3] = estimate(lattices[:,3])[1]
+    h0A[1,2] = estimate(lattices[:,2])[1]
+
+    h0 = SMatrix{3, 3, Float64}(h0A)
 
     # eq 17 parrinello+rahman1982
     h0_inv = inv(h0)
     h0_inv_T = transpose(h0_inv)
+    I3 = SA.I(3)
 
     for i in 1:l
         # populating h with "strained" vol
+        h = @SMatrix [lattices[i,1] lattices[i,2] lattices[i,3];
+                      0.0           lattices[i,4] lattices[i,5];
+                      0.0           0.0           lattices[i,6]]
         h[1,1] = lattices[i,1]; h[2,2] = lattices[i,4]; h[3,3] = lattices[i,6]
         h[2,3] = lattices[i,5]; h[1,3] = lattices[i,3]
         h[1,2] = lattices[i,2]
