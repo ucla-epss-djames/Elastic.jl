@@ -45,7 +45,7 @@ function strain_fluctuation(
         V[i] = det(h)
 
         Gh0_inv = G * h0_inv
-        ϵ0 = 0.5*(h0_inv_T*Gh0_inv - I(3))
+        ϵ0 = 0.5*(h0_inv_T*Gh0_inv - I3)
         ϵ[i,1] = ϵ0[1,1]
         ϵ[i,2] = ϵ0[2,2]
         ϵ[i,3] = ϵ0[3,3]

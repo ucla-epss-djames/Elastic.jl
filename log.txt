@@ -19,3 +19,9 @@ almost cut in half in time and memory estimate reduced
 BenchmarkTools.Trial: 1 sample with 1 evaluation per sample.
  Single result which took 170.339 s (16.79% GC) to evaluate,
  with a memory estimate of 128.38 GiB, over 1598677135 allocations.
+
+after StaticArrays change
+speed cut more and memory estimate further reduced
+BenchmarkTools.Trial: 1 sample with 1 evaluation per sample.
+ Single result which took 47.524 s (15.99% GC) to evaluate,
+ with a memory estimate of 40.05 GiB, over 116729639 allocations.
