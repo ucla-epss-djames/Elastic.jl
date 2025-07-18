@@ -59,7 +59,7 @@ function strain_fluctuation(
 end
 
 function compliances_from_fluctuations(
-    ϵ::AbstractMatrix{<:Float64}, V::Vector{Float64}, T::Union{Int64, Float64}
+    ϵ::AbstractMatrix{<:Float64}, V::AbstractVector{<:Float64}, T::Real
     )::Matrix{Float64}
 
     ϵ_avg = zeros(9,2)
