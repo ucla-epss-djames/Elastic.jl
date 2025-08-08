@@ -94,6 +94,39 @@ function compliances_from_fluctuations(
     return S
 end
 
+# --- compliances routine re-written with the lazy view -----------------
+struct ProdView{T<:AbstractVector} <: AbstractVector{Float64}
+    a::T; b::T
+end
+
+Base.length(v::ProdView) = length(v.a)
+Base.size(v::ProdView)   = (length(v),)
+@inline Base.getindex(v::ProdView, i::Int) = v.a[i] * v.b[i]
+@inline Base.IndexStyle(::Type{<:ProdView}) = IndexLinear()
+
+
+function compliances_from_fluctuations!(
+    S::AbstractMatrix{Float64},
+    ϵ::AbstractMatrix{Float64},
+    V::AbstractVector{Float64},
+    T::Real)
+
+    l  = size(ϵ,1)
+    V_avg = estimate(V)[1]
+    Am = 1e30
+    GPa = 1e-9
+    kB = k_B.val
+    f  = V_avg / (k_B * T) / Am / GPa
+
+    pairs = ((1,1),(2,2),(3,3),(1,2),(1,3),(2,3),(1,1),(2,2),(3,3))
+    for (idx,(a,b)) in enumerate(pairs)
+        # no allocation here — ProdView computes products on the fly
+        S[idx,:] .= estimate(ProdView(@view(ϵ[:,a]), @view(ϵ[:,b])))
+    end
+    S .*= f
+    return S
+end
+
 function symmetric_compliances(S::AbstractMatrix{<:Float64})::Matrix{Float64}
     Sc = zeros(3,3)
 
