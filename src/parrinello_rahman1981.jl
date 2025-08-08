@@ -117,7 +117,7 @@ function compliances_from_fluctuations!(
     Am = 1e30
     GPa = 1e-9
     kB = k_B.val
-    f  = V_avg / (k_B * T) / Am / GPa
+    f  = V_avg / (kB * T) / Am / GPa
 
     pairs = ((1,1),(2,2),(3,3),(1,2),(1,3),(2,3),(1,1),(2,2),(3,3))
     for (idx,(i,j)) in enumerate(pairs)
