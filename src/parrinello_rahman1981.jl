@@ -107,6 +107,7 @@ Base.size(v::ProdView)   = (length(v),)
 
 function compliances_from_fluctuations!(
     S::AbstractMatrix{Float64},
+    w::AbstractVector{Float64},
     ϵ::AbstractMatrix{Float64},
     V::AbstractVector{Float64},
     T::Real)
@@ -120,8 +121,11 @@ function compliances_from_fluctuations!(
 
     pairs = ((1,1),(2,2),(3,3),(1,2),(1,3),(2,3),(1,1),(2,2),(3,3))
     for (idx,(a,b)) in enumerate(pairs)
+        @inbounds @simd for k in 1:l
+            w[k] = ϵ[k,i] * ϵ[k,j]
+        end
         # no allocation here — ProdView computes products on the fly
-        S[idx,:] .= estimate(ProdView(@view(ϵ[:,a]), @view(ϵ[:,b])))
+        S[idx,:] .= estimate(@view(w, 1:l))
     end
     S .*= f
     return S
