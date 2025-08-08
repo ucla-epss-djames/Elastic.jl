@@ -125,7 +125,7 @@ function compliances_from_fluctuations!(
             w[k] = ϵ[k,i] * ϵ[k,j]
         end
         # no allocation here — ProdView computes products on the fly
-        S[idx,:] .= estimate(@view(w, 1:l))
+        S[idx,:] .= estimate(@view w[1:l])
     end
     S .*= f
     return S
