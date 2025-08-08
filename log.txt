@@ -36,52 +36,23 @@ BenchmarkTools.Trial: 1 sample with 1 evaluation per sample.
  Single result which took 46.647 s (16.02% GC) to evaluate,
  with a memory estimate of 36.65 GiB, over 2752137 allocations.
 
--- not related to code base, but related to usage for el constant running average
-moved steps outside of for loop, saved into arrays and calculated constants using data
-Mac i9
-BenchmarkTools.Trial: 1 sample with 1 evaluation per sample.
- Single result which took 25.799 s (16.22% GC) to evaluate,
- with a memory estimate of 24.50 GiB, over 1898383 allocations.
-BenchmarkTools.Trial: 1 sample with 1 evaluation per sample.
- Single result which took 29.764 s (16.98% GC) to evaluate,
- with a memory estimate of 24.50 GiB, over 1898379 allocations.
+adjusted compliances_from_fluctuations to work in buffers and avoid allocation
+increased speed and reduced allocs to MiBs
+BenchmarkTools.Trial: 2 samples with 1 evaluation per sample.
+ Range (min … max):  3.327 s …    4.084 s  ┊ GC (min … max): 0.26% … 0.00%
+ Time  (median):     3.705 s               ┊ GC (median):    0.11%
+ Time  (mean ± σ):   3.705 s ± 534.712 ms  ┊ GC (mean ± σ):  0.11% ± 0.18%
+ Memory estimate: 55.29 MiB, allocs estimate: 630874.
 
-Thinkpad i3
-n = 15000
--- single thread
-BenchmarkTools.Trial: 1 sample with 1 evaluation per sample.
- Single result which took 8.133 s (11.58% GC) to evaluate,
- with a memory estimate of 23.88 GiB, over 1931613 allocations.
-BenchmarkTools.Trial: 1 sample with 1 evaluation per sample.
- Single result which took 8.193 s (11.94% GC) to evaluate,
- with a memory estimate of 23.88 GiB, over 1931613 allocations.
-BenchmarkTools.Trial: 1 sample with 1 evaluation per sample.
- Single result which took 11.399 s (12.71% GC) to evaluate,
- with a memory estimate of 23.88 GiB, over 1931613 allocations.
-BenchmarkTools.Trial: 1 sample with 1 evaluation per sample.
- Single result which took 7.090 s (15.30% GC) to evaluate,
- with a memory estimate of 23.88 GiB, over 1931638 allocations.
-
--- multithreaded
-nt = 4
-
-n = 45000
--- single thead nt = 1
-BenchmarkTools.Trial: 1 sample with 1 evaluation per sample.
- Single result which took 90.452 s (11.77% GC) to evaluate,
- with a memory estimate of 212.37 GiB, over 4961613 allocations.
-BenchmarkTools.Trial: 1 sample with 1 evaluation per sample.
- Single result which took 78.925 s (10.76% GC) to evaluate,
- with a memory estimate of 212.37 GiB, over 4961620 allocations.
-BenchmarkTools.Trial: 1 sample with 1 evaluation per sample.
- Single result which took 71.042 s (13.49% GC) to evaluate,
- with a memory estimate of 212.37 GiB, over 4961652 allocations.
-
--- multithreaded
-nt = 4
 
 n = 100000 -- stress test of larger lattice running averages
 before changes this took about 55-65 mins
+after StaticArrays change
 BenchmarkTools.Trial: 1 sample with 1 evaluation per sample.
  Single result which took 983.397 s (11.86% GC) to evaluate,
  with a memory estimate of 1050.63 GiB, over 10313381 allocations.
+
+after buffer allocation change
+BenchmarkTools.Trial: 1 sample with 1 evaluation per sample.
+ Single result which took 171.165 s (0.01% GC) to evaluate,
+ with a memory estimate of 155.23 MiB, over 1820878 allocations.
