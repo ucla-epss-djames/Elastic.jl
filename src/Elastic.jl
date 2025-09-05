@@ -5,6 +5,7 @@ using BlockingMethod
 
 include("atoms.jl")
 include("static.jl")
+include("mol_dnmc.jl")
 include("voigt_reuss.jl")
 include("extrapolation.jl")
 include("hashin_shtrikman.jl")

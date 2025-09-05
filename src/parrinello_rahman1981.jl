@@ -1,4 +1,4 @@
-using StatsBase
+using Statistics
 using StaticArrays
 using LinearAlgebra
 using BlockingMethod
