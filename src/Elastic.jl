@@ -44,13 +44,13 @@ function elastic_moduli(S::AbstractMatrix{<:Float64},
     GPa = 1e-9
     kB = k_B.val
     V_avg = estimate(V)
-    V2_avg = estimate(V .^ 2)
-    ΔV = V2_avg[1] - V_avg[1]^2
+    ΔV = estimate((V .- V_avg[1]).^2)
     fx = kB * T * Am * GPa
     K = V_avg[1] / ΔV[1] * fx
-    Kx = V_avg[2]^2*(fx*(V2_avg[1]+V_avg[1]^2)/(V2_avg[1] - V_avg[1]^2)^2)^2
-    Kx += V2_avg[2]^2*(-V_avg[1]*fx / (V2_avg[1] - V_avg[1]^2)^2)^2
-    Kx = sqrt(Kx)
+    # Kx = V_avg[2]^2*(fx*(V2_avg[1]+V_avg[1]^2)/(V2_avg[1] - V_avg[1]^2)^2)^2
+    # Kx += V2_avg[2]^2*(-V_avg[1]*fx / (V2_avg[1] - V_avg[1]^2)^2)^2
+    # Kx = sqrt(Kx)
+    Kx = 0
 
     # VOIGT-REUSS G1 - DEBUGGING
     voigt_G = muv(C[1,1], C[2,1], C[3,1])
@@ -91,9 +91,9 @@ function elastic_moduli(S::AbstractMatrix{<:Float64},
 
     mod[1,:] = [voigt_K voigt_Kx]
     mod[2,:] = [K Kx]
-    mod[2,:] = [vr_G_avg vr_Gx_avg]
-    mod[3,:] = [vr_G_avg2 vr_Gx_avg2]
-    mod[4,:] = [hs_G_avg hs_Gx_avg]
+    mod[3,:] = [vr_G_avg vr_Gx_avg]
+    mod[4,:] = [vr_G_avg2 vr_Gx_avg2]
+    mod[5,:] = [hs_G_avg hs_Gx_avg]
 
     return mod
 end
