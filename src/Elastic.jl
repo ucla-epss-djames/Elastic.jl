@@ -47,6 +47,7 @@ function elastic_moduli(S::AbstractMatrix{<:Float64},
     ΔV = estimate((V .- V_avg[1]).^2)
     fx = kB * T * Am * GPa
     K = V_avg[1] / ΔV[1] * fx
+    Kx = V_avg[2] / ΔV[1] * fx
     # Kx = V_avg[2]^2*(fx*(V2_avg[1]+V_avg[1]^2)/(V2_avg[1] - V_avg[1]^2)^2)^2
     # Kx += V2_avg[2]^2*(-V_avg[1]*fx / (V2_avg[1] - V_avg[1]^2)^2)^2
     # Kx = sqrt(Kx)
@@ -54,7 +55,7 @@ function elastic_moduli(S::AbstractMatrix{<:Float64},
 
     # VOIGT-REUSS G1 - DEBUGGING
     voigt_G = muv(C[1,1], C[2,1], C[3,1])
-    voigt_Gx = C[1,3]^2*(0.2)^2 + C[2,3]^2*(-0.2)^2 + C[3,3]*(0.6)^2
+    voigt_Gx = C[1,3]^2*(0.2)^2 + C[2,3]^2*(-0.2)^2 + C[3,3]^2*(0.6)^2
     voigt_Gx = sqrt(voigt_Gx)
 
     reuss_G = mur(S[1,1], S[2,1], S[3,1])
@@ -79,15 +80,26 @@ function elastic_moduli(S::AbstractMatrix{<:Float64},
     vr_Gx_avg2 = sqrt(vr_Gx_avg2)
 
     # HASHIN-SHTRIKMAN G - DOESNT WORK
-    hs_G1 = G1HS(voigt_K, C[1,1], C[2,1], C[3,1])
-    hs_G1x = sqrt(0)
+    params = [voigt_K, C[1,1], C[2,1], C[3,1]]
+    errors = [voigt_Kx, C[1,2], C[2,2], C[3,2]]
 
-    hs_G2 = G2HS(voigt_K, C[1,1], C[2,1], C[3,1])
-    hs_G2x = sqrt(0)
+    hs_G1 = G1HS(params...)
+    hs_G1x = propagate_error(G1HS, params, errors)
+
+    hs_G2 = G2HS(params...)
+    hs_G2x = propagate_error(G2HS, params, errors)
 
     hs_G_avg = (hs_G1 + hs_G2) / 2.0
-    hs_Gx_avg = hs_G1x^2 / 4.0 + hs_G2x^2 / 4.0
-    hs_G_avg = sqrt(hs_G_avg)
+    hs_Gx_avg = sqrt(hs_G1x^2 / 4.0 + hs_G2x^2 / 4.0)
+
+    # hs_G1 = G1HS(voigt_K, C[1,1], C[2,1], C[3,1])
+    # hs_G1x = sqrt(0)
+
+    # hs_G2 = G2HS(voigt_K, C[1,1], C[2,1], C[3,1])
+    # hs_G2x = sqrt(0)
+
+    # hs_G_avg = (hs_G1 + hs_G2) / 2.0
+    # hs_Gx_avg = hs_G1x^2 / 4.0 + hs_G2x^2 / 4.0
 
     mod[1,:] = [voigt_K voigt_Kx]
     mod[2,:] = [K Kx]
@@ -96,6 +108,17 @@ function elastic_moduli(S::AbstractMatrix{<:Float64},
     mod[5,:] = [hs_G_avg hs_Gx_avg]
 
     return mod
+end
+
+function propagate_error(f, x, σx; δ=1e-6)
+    f0 = f(x...)
+    σ² = 0.0
+    for i in eachindex(x)
+        xp = collect(x)
+        xp[i] += δ * abs(x[i])
+        σ² += ((f(xp...) - f0) / (δ * abs(x[i])))^2 * σx[i]^2
+    end
+    return sqrt(σ²)
 end
 
 end # end of module

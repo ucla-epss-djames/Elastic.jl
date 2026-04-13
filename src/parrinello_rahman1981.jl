@@ -163,6 +163,7 @@ function cubic_elastic_constants(S::AbstractMatrix{<:Float64})::Matrix{Float64}
     C[1,2] = S[1,2]^2 * (-2/(3*a^2) - 1/(3*b^2))^2
     C[1,2] += S[2,2]^2 * (2/(3*a^2) - 2/(3*b^2))^2
     C[1,2] = sqrt(C[1,2])
+    C[1,3]  = Sc[1,3]^2 * (-2/(3*a^2) - 1/(3*b^2))^2
     C[1,3] += S[2,3]^2 * (2/(3*a^2) - 2/(3*b^2))^2
     C[1,3] = sqrt(C[1,3])
 
@@ -171,6 +172,7 @@ function cubic_elastic_constants(S::AbstractMatrix{<:Float64})::Matrix{Float64}
     C[2,2] = S[1,2]^2 * (1/(3*a^2) - 1/(3*b^2))^2
     C[2,2] += S[2,2]^2 * (-1/(3*a^2) - 2/(3*b^2))^2
     C[2,2] = sqrt(C[2,2])
+    C[2,3]  = Sc[1,3]^2 * (1/(3*a^2) - 1/(3*b^2))^2
     C[2,3] += S[2,3]^2 * (-1/(3*a^2) - 2/(3*b^2))^2
     C[2,3] = sqrt(C[2,3])
 
