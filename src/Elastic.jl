@@ -47,20 +47,16 @@ function elastic_moduli(S::AbstractMatrix{<:Float64},
     ΔV = estimate((V .- V_avg[1]).^2)
     fx = kB * T * Am * GPa
     K = V_avg[1] / ΔV[1] * fx
-    Kx = V_avg[2] / ΔV[1] * fx
-    # Kx = V_avg[2]^2*(fx*(V2_avg[1]+V_avg[1]^2)/(V2_avg[1] - V_avg[1]^2)^2)^2
-    # Kx += V2_avg[2]^2*(-V_avg[1]*fx / (V2_avg[1] - V_avg[1]^2)^2)^2
-    # Kx = sqrt(Kx)
-    Kx = 0
+    Kx = K * sqrt((V_avg[2] / V_avg[1])^2 + (ΔV[2] / ΔV[1])^2)
 
-    # VOIGT-REUSS G1 - DEBUGGING
+    # VOIGT-REUSS G1
     voigt_G = muv(C[1,1], C[2,1], C[3,1])
     voigt_Gx = C[1,3]^2*(0.2)^2 + C[2,3]^2*(-0.2)^2 + C[3,3]^2*(0.6)^2
     voigt_Gx = sqrt(voigt_Gx)
 
-    reuss_G = mur(S[1,1], S[2,1], S[3,1])
-    fx = -5.0 * (4.0*S[1,1] - 4.0*S[2,1] + 3.0*S[3,1])^(-2)
-    reuss_Gx = S[1,3]^2*(4.0*fx)^2 + S[2,3]^2*(-4.0*fx)^2 + S[3,3]^2*(3.0*fx)^2
+    reuss_G = mur(S[1,1], S[2,1], 4*S[3,1])
+    fx = -5.0 * (4.0*S[1,1] - 4.0*S[2,1] + 3.0*4*S[3,1])^(-2)
+    reuss_Gx = S[1,3]^2*(4.0*fx)^2 + S[2,3]^2*(-4.0*fx)^2 + (4*S[3,3])^2*(3.0*fx)^2
     reuss_Gx = sqrt(reuss_Gx)
 
     vr_G_avg = (voigt_G + reuss_G) / 2.0
@@ -91,15 +87,6 @@ function elastic_moduli(S::AbstractMatrix{<:Float64},
 
     hs_G_avg = (hs_G1 + hs_G2) / 2.0
     hs_Gx_avg = sqrt(hs_G1x^2 / 4.0 + hs_G2x^2 / 4.0)
-
-    # hs_G1 = G1HS(voigt_K, C[1,1], C[2,1], C[3,1])
-    # hs_G1x = sqrt(0)
-
-    # hs_G2 = G2HS(voigt_K, C[1,1], C[2,1], C[3,1])
-    # hs_G2x = sqrt(0)
-
-    # hs_G_avg = (hs_G1 + hs_G2) / 2.0
-    # hs_Gx_avg = hs_G1x^2 / 4.0 + hs_G2x^2 / 4.0
 
     mod[1,:] = [voigt_K voigt_Kx]
     mod[2,:] = [K Kx]
